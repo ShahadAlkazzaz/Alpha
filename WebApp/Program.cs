@@ -11,8 +11,15 @@ using WebApp.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Lägg till DbContext med connection string från appsettings.json
+var env = builder.Environment;
+
+var connectionString = env.IsDevelopment()
+    ? builder.Configuration.GetConnectionString("DefaultConnection")  // LocalDB
+    : builder.Configuration.GetConnectionString("AzureConnection");   // Azure
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
+
 
 // Lägg till Identity och koppla till vår ApplicationUser och DbContext
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

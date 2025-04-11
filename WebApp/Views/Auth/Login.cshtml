@@ -1,0 +1,51 @@
+﻿@model WebApp.Models.LoginViewModel
+
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Login";
+}
+
+<section id="login" class="auth">
+    <div class="auth-box">
+        <div class="section-header">
+            <h1 class="h2">@ViewData["Title"]</h1>
+        </div>
+        <div class="section-body">
+            <!-- Visa felmeddelanden -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="text-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+
+            <form asp-action="Login" asp-controller="Auth" method="post" novalidate>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Your email address" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input asp-for="RememberMe" />
+                    <label asp-for="RememberMe">Remember me</label>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Login</button>
+            </form>
+        </div>
+
+        <div class="section-footer">
+            Don't have an account? <a asp-action="Register" asp-controller="Auth">Sign Up</a>
+        </div>
+    </div>
+</section>

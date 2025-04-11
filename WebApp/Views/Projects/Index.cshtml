@@ -1,0 +1,195 @@
+﻿@model IEnumerable<WebApp.Models.ViewModels.ProjectViewModel>
+
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+
+<section>
+    <header class="projects-header">
+        <div class="left">
+            <h1 class="h1">Projects</h1>
+            <nav class="project-filter">
+                <a asp-controller="Projects" asp-action="Index" class="@(ViewBag.Filter == "ALL" ? "active" : "")">
+                    All [@ViewBag.AllCount]
+                </a>
+                <a asp-controller="Projects" asp-action="Started" class="@(ViewBag.Filter == "STARTED" ? "active" : "")">
+                    Started [@ViewBag.StartedCount]
+                </a>
+                <a asp-controller="Projects" asp-action="Completed" class="@(ViewBag.Filter == "COMPLETED" ? "active" : "")">
+                    Completed [@ViewBag.CompletedCount]
+                </a>
+            </nav>
+
+        </div>
+        <button class="btn btn-blue add-project-btn" onclick="openModal()">+ Add Project</button>
+    </header>
+
+
+
+    <main class="content">
+        @if (!Model.Any())
+        {
+            <p>No projects found.</p>
+        }
+        else
+        {
+            <div class="project-grid">
+                @foreach (var project in Model)
+                {
+                    <div class="project-card">
+                        <!-- Kebabmeny -->
+                        <div class="card-options">
+                            <button class="options-btn" onclick="toggleOptions(this)">‥</button>
+                            <div class="options-menu">
+                                <button class="option-item" onclick='openEditModal(@Html.Raw(Json.Serialize(new {
+                    id = project.Id,
+                    title = project.Title,
+                    clientName = project.ClientName,
+                    description = project.Description,
+                    startDate = project.StartDate?.ToString("yyyy-MM-dd"),
+                    endDate = project.EndDate?.ToString("yyyy-MM-dd"),
+                    budget = project.Budget,
+                    status = project.Status
+                })))'>
+                                    <i class="fas fa-pen"></i> Edit
+                                </button>
+
+                                <button type="button" class="option-item delete" onclick="openDeleteModal(@project.Id)">
+                                    <i class="fas fa-trash-alt"></i> Delete Project
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Övre del: logotyp + titel + klient -->
+                        <div class="project-header">
+                            <div class="project-logo-wrapper">
+                                <img src="~/images/user-image.svg" alt="project logo" class="project-logo" />
+                            </div>
+                            <div class="project-info">
+                                <h5 class="project-title">@project.Title</h5>
+                                <p class="project-client">@project.ClientName</p>
+                            </div>
+                        </div>
+
+                        <!-- Beskrivning -->
+                        <p class="project-description">@project.Description</p>
+
+                        <!-- Status-tag -->
+                        <p class="project-status">
+                            <strong>Status:</strong>
+                            <span class="status-tag @(project.Status?.ToLower())">@project.Status</span>
+                        </p>
+
+                        <!-- Datum -->
+                        @if (project.StartDate.HasValue && project.EndDate.HasValue)
+                        {
+                            <p class="project-dates">
+                                <strong>Duration:</strong>
+                                @project.StartDate?.ToString("MMM dd, yyyy") - @project.EndDate?.ToString("MMM dd, yyyy")
+                            </p>
+                        }
+
+                        <!-- Budget -->
+                        @if (project.Budget.HasValue)
+                        {
+                            <p class="project-budget"><strong>Budget:</strong> $@project.Budget.Value.ToString("N0")</p>
+                        }
+                    </div>
+                }
+
+
+            </div>
+        }
+    </main>
+</section>
+
+
+
+
+@await Html.PartialAsync("~/Views/Shared/Partials/Modals/_AddProjectModal.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Partials/Modals/_EditProjectModal.cshtml")
+@await Html.PartialAsync("~/Views/Shared/Partials/Modals/_DeleteProjectModal.cshtml")
+
+
+
+
+
+@section Scripts {
+    <script>
+        function openModal() {
+            document.getElementById('addProjectModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('addProjectModal').style.display = 'none';
+        }
+
+        // AI-genererad kod: Hanterar öppning/stängning av "kebab"-menyn för varje projektkort
+            function toggleOptions(button) {
+                const menu = button.nextElementSibling;
+                document.querySelectorAll('.options-menu').forEach(m => {
+                    if (m !== menu) m.classList.remove('show');
+                });
+            menu.classList.toggle('show');
+            }
+
+            // Stäng meny om du klickar utanför
+            window.addEventListener('click', function (e) {
+                if (!e.target.closest('.card-options')) {
+                document.querySelectorAll('.options-menu').forEach(m => m.classList.remove('show'));
+                }
+            });
+
+
+
+        // AI-genererad kod: Funktion för att förfylla och öppna edit-modal med data från ett projekt
+        function openEditModal(project) {
+            document.getElementById('Edit_Id').value = project.id;
+            document.getElementById('Edit_Title').value = project.title;
+            document.getElementById('Edit_ClientName').value = project.clientName;
+            document.getElementById('Edit_Description').value = project.description;
+            document.getElementById('Edit_StartDate').value = project.startDate?.split('T')[0];
+            document.getElementById('Edit_EndDate').value = project.endDate?.split('T')[0];
+            document.getElementById('Edit_Budget').value = project.budget;
+            document.getElementById('Edit_Status').value = project.status;
+
+            document.getElementById('editProjectModal').style.display = 'flex';
+
+
+        }
+
+
+        function closeEditModal() {
+            document.getElementById('editProjectModal').style.display = 'none';
+        }
+
+
+        // AI-genererad kod: Funktion för att öppna delete-modal och sätta ID för projektet som ska tas bort
+         function openDeleteModal(id) {
+        document.getElementById("Delete_Id").value = id;
+        document.getElementById("deleteProjectModal").style.display = "flex";
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("deleteProjectModal").style.display = "none";
+    }
+
+
+    function toggleProfileMenu() {
+        const menu = document.getElementById("profileMenu");
+        menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+    }
+        // AI-genererad kod: Stänger profilmenyn om man klickar utanför settings-avatar-wrapper eller meny
+    window.addEventListener("click", function (e) {
+        if (!e.target.closest('.settings-avatar-wrapper') && !e.target.closest('.profile-menu')) {
+            const menu = document.getElementById("profileMenu");
+            if (menu) menu.style.display = "none";
+        }
+    });
+
+
+
+    </script>
+}

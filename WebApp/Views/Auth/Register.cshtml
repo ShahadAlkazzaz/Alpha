@@ -1,0 +1,70 @@
+﻿@model WebApp.Models.RegisterViewModel
+
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Create Account";
+}
+
+<section id="register" class="auth">
+    <div class="auth-box">
+        <div class="section-header">
+            <h1 class="h2">@ViewData["Title"]</h1>
+        </div>
+        <div class="section-body">
+            <!-- Visa fel om något gick snett -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="text-danger">
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <div>@error.ErrorMessage</div>
+                    }
+                </div>
+            }
+
+            <form asp-action="Register" asp-controller="Auth" method="post">
+                <div class="form-group">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" placeholder="Your first name" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" placeholder="Your last name" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Your email address" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="TermsAndConditions" type="checkbox" />
+                    <label asp-for="TermsAndConditions">I accept the terms</label>
+                    <span asp-validation-for="TermsAndConditions" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Create Account</button>
+            </form>
+        </div>
+
+        <div class="section-footer">
+            Already have an account? <a asp-action="Login" asp-controller="Auth">Login</a>
+        </div>
+    </div>
+</section>

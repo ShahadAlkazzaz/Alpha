@@ -1,0 +1,57 @@
+﻿<!-- Add project Modal -->
+<div class="modal" id="addProjectModal" style="display:none;">
+    <div class="modal-content">
+        <header>
+            <h3 class="modal-title">Add Project</h3>
+            <button onclick="closeModal()" class="btn-close">✖</button>
+        </header>
+
+        <div class="modal-image">
+            <img src="~/images/user-image.svg" alt="User Icon" />
+        </div>
+
+        <form asp-action="Create" asp-controller="Projects" method="post">
+            <div class="form-group">
+                <label for="Title">Project Name</label>
+                <input id="Title" name="Title" placeholder="Project Name" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="ClientName">Client Name</label>
+                <input id="ClientName" name="ClientName" placeholder="Client Name" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="Description">Description</label>
+                <textarea id="Description" name="Description" placeholder="Type something" class="form-control"></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="StartDate">Start Date</label>
+                    <input id="StartDate" name="StartDate" type="date" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="EndDate">End Date</label>
+                    <input id="EndDate" name="EndDate" type="date" class="form-control" />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="Budget">Budget</label>
+                    <input id="Budget" name="Budget" type="number" class="form-control" placeholder="$ 0" />
+                </div>
+                <div class="form-group">
+                    <label for="Status">Status</label>
+                    <select id="Status" name="Status" class="form-control">
+                        <option value="Started">Started</option>
+                        <option value="Completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Create</button>
+        </form>
+    </div>
+</div>
